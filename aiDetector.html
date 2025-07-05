@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Detector Terminal</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <style>
+        :root {
+            --primary-blue: #4a5561;
+            --primary-teal: #3b5364;
+            --terminal-bg: #0a0e23;
+            --text-color: #e0e0e0;
+            --highlight: #7fffd4;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0f0c29, #302b63);
+            margin: 0;
+            padding: 20px;
+            height: 100vh;
+            overflow: hidden;
+            color: var(--text-color);
+        }
+        
+        .terminal-container {
+            width: 800px;
+            height: 600px;
+            margin: 0 auto;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .terminal-header {
+            background: linear-gradient(to right, var(--primary-blue), var(--primary-teal));
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        
+        .terminal-title {
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .terminal-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .control-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: none;
+        }
+        
+        .close {
+            background: #ff5f56;
+        }
+        
+        .minimize {
+            background: #ffbd2e;
+        }
+        
+        .maximize {
+            background: #27c93f;
+        }
+        
+        .terminal-body {
+            background-color: var(--terminal-bg);
+            flex-grow: 1;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .prompt {
+            display: flex;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .user {
+            color: #3e8adc;
+            margin-right: 5px;
+        }
+        
+        .path {
+            color: var(--primary-blue);
+            margin-right: 5px;
+        }
+        
+        .cursor {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        .terminal-input {
+            background-color: transparent;
+            border: none;
+            color: var(--text-color);
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+            resize: none;
+            flex-grow: 1;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid rgba(74, 144, 226, 0.3);
+        }
+        
+        .terminal-input:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+        
+        .terminal-footer {
+            background: linear-gradient(to right, var(--primary-blue), var(--primary-teal));
+            padding: 10px 15px;
+            display: flex;
+            gap: 15px;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+        
+        .btn {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-blue);
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a7bc8;
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #3e8adc;
+        }
+        
+        .glow {
+            text-shadow: 0 0 10px rgba(74, 144, 226, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal-container">
+        <div class="terminal-header">
+            <div class="terminal-title">AI Detector Terminal</div>
+            <div class="terminal-controls">
+                <button class="control-btn close"></button>
+                <button class="control-btn minimize"></button>
+                <button class="control-btn maximize"></button>
+            </div>
+        </div>
+        
+        <div class="terminal-body">
+            <div class="prompt">
+                <span class="user">ai-detector@DangerousAngel</span>
+                <span class="path">~/analysis</span>
+                <span class="cursor">▋</span>
+            </div>
+            <textarea id="textarea" class="terminal-input" placeholder="Paste AI-generated text here and click 'Detect'..."></textarea>
+        </div>
+        
+        <div class="terminal-footer">
+            <button onclick="detect()" class="btn btn-primary">Detect AI</button>
+            <button onclick="copy()" class="btn">Copy</button>
+            <button onclick="about()" class="btn">About</button>
+            <button onclick="window.open('https://abodx9.github.io/LinksBio/', '_blank')" class="btn btn-secondary">Developer</button>
+        </div>
+    </div>
+
+    <script>
+        function copy() {
+            let textarea = document.getElementById("textarea");
+            textarea.select();
+            document.execCommand("copy");
+            Toastify({
+                text: "Copied to clipboard!",
+                backgroundColor: "linear-gradient(to right, #4a90e2, #50e3c2)",
+                className: "info",
+            }).showToast();
+        }
+        
+        function about() {
+            document.getElementById('textarea').value = `AI Detector Terminal v2.0
+--------------------------------------------------
+Created by: Abodx + DangerousAngel
+--------------------------------------------------
+This advanced terminal interface connects to the ZeroGPT API
+to detect AI-generated content with high accuracy.
+
+Features:
+- Real-time analysis
+- Terminal-style interface
+- Gradient color scheme
+- Responsive design
+--------------------------------------------------
+Enter text and click "Detect AI" to begin analysis.`;
+        }
+        
+        function detect() {
+            var textarea = document.getElementById("textarea");
+            var text = textarea.value.trim();
+            
+            if (!text) {
+                Toastify({
+                    text: "Please enter some text to analyze!",
+                    backgroundColor: "linear-gradient(to right, #ff5f56, #ffbd2e)",
+                    className: "info",
+                }).showToast();
+                return;
+            }
+            
+            // Show loading state
+            textarea.value = "Analyzing text... Please wait...\n\n" + text;
+            
+            fetch("https://api.zerogpt.com/api/detect/detectText", {
+                method: "POST",
+                headers: {
+                    "Host": "api.zerogpt.com",
+                    "Access-Control-Allow-Origin": "*",
+                    "Content-Length": text.length, 
+                    "Accept": "application/json, text/plain, */*",
+                    "Content-Type": "application/json",
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.6422.112 Safari/537.36",
+                    "Origin": "https://www.zerogpt.com",
+                    "Referer": "https://www.zerogpt.com/",
+                    "Accept-Encoding": "gzip, deflate, br"
+                },
+                body: JSON.stringify({ input_text: text }),
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                const feedback = data.data.feedback || "No analysis available. Please try again.";
+                textarea.value = `AI Detection Results:
+--------------------------------------------------
+${feedback}
+--------------------------------------------------
+Original Text:
+${text}`;
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                textarea.value = `Error: Failed to analyze text.
+--------------------------------------------------
+${error.message || "Unknown error occurred"}
+--------------------------------------------------
+Original Text:
+${text}`;
+            });
+        }
+        
+        // Add some terminal-like effects
+        document.addEventListener('DOMContentLoaded', () => {
+            const textarea = document.getElementById("textarea");
+            textarea.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && e.ctrlKey) {
+                    detect();
+                }
+            });
+            
+            // Add welcome message
+            setTimeout(() => {
+                about();
+            }, 500);
+        });
+    </script>
+</body>
+</html>
