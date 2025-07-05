@@ -17,7 +17,7 @@ A sleek, terminal-style web app that detects AI-generated text using the ZeroGPT
 ---  
 
 Created by **Abodx + DangerousAngel**  
-[Developer Profile](https://abodx9.github.com/abod/)  
-[Developer Profile](https://abodx9.github.io/DangerousAngel/)  
+[Abodx](https://github.com/Abodx9/)  
+[DangerousAngel](https://abodx9.github.io/DangerousAngel/)  
 
 *Simply open the HTML file in any modern browser to use!* 🚀
