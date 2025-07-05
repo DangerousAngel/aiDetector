@@ -190,22 +190,27 @@
         
         <div class="terminal-footer">
             <button onclick="detect()" class="btn btn-primary">Detect AI</button>
-            <button onclick="copy()" class="btn">Copy</button>
+            <button onclick="paste()" class="btn">paste</button>
             <button onclick="about()" class="btn">About</button>
         </div>
     </div>
 
     <script>
-        function copy() {
-            let textarea = document.getElementById("textarea");
-            textarea.select();
-            document.execCommand("copy");
-            Toastify({
-                text: "Copied to clipboard!",
-                backgroundColor: "linear-gradient(to right, #4a90e2, #50e3c2)",
-                className: "info",
-            }).showToast();
-        }
+async function paste() {
+    const textarea = document.getElementById("textarea");
+    try {
+        textarea.value = await navigator.clipboard.readText();
+        Toastify({
+            text: "Pasted from clipboard!",
+            backgroundColor: "#4a5561"
+        }).showToast();
+    } catch (err) {
+        Toastify({
+            text: "Paste failed!",
+            backgroundColor: "#4a5561"
+        }).showToast();
+    }
+}
         
         function about() {
             document.getElementById('textarea').value = `AI Detector Terminal v2.0
@@ -231,7 +236,7 @@ Enter text and click "Detect AI" to begin analysis.`;
             if (!text) {
                 Toastify({
                     text: "Please enter some text to analyze!",
-                    backgroundColor: "linear-gradient(to right, #ff5f56, #ffbd2e)",
+                    backgroundColor: "#4a5561",
                     className: "info",
                 }).showToast();
                 return;
