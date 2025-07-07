@@ -1,6 +1,7 @@
 # AI Detector Terminal v2
 
-A sleek, terminal-style web app that detects AI-generated text using the ZeroGPT API.  
+A sleek, terminal-style web app that detects AI-generated text using the ZeroGPT API. 
+[AiDetector](ScreenshotaiD.png)
 
 ## Features  
 
